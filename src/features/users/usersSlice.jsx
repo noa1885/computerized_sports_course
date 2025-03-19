@@ -4,7 +4,6 @@ import axios from "axios";
 // יצירת פעולות אסינכרוניות עם createAsyncThunk
 export const serverSignUp = createAsyncThunk("user-SignUp", async (user, thunkApi) => {
   try {
-    
     let { data } = await axios.post("https://localhost:7206/api/Client", user);
     return data;
   } catch (error) {
@@ -17,11 +16,9 @@ export const serverSignIn = createAsyncThunk("user-SignIn", async (user, thunkAp
     const { data } = await axios.post("https://localhost:7206/api/Client/SignIn", user);
     return data;
   } catch (error) {
-    // טיפול בשגיאה במקרה של 404 (משתמש לא נמצא)
     if (error.response && error.response.status === 404) {
       return thunkApi.rejectWithValue("המשתמש לא נמצא במערכת.");
     }
-    // טיפול בשגיאות אחרות
     return thunkApi.rejectWithValue(error.response?.data || "שגיאה כלשהי.");
   }
 });
@@ -43,7 +40,6 @@ export const userSlice = createSlice({
       })
       .addCase(serverSignIn.rejected, (state, action) => {
         state.status = "failed";
-        // טיפול בשגיאה במקרה של 404 (משתמש לא נמצא)
         if (action.payload === "המשתמש לא נמצא במערכת.") {
           state.message = action.payload;
         } else {
@@ -61,7 +57,6 @@ export const userSlice = createSlice({
       })
       .addCase(serverSignUp.rejected, (state, action) => {
         state.status = "failed";
-        // אם שגיאה על מייל וסיסמא קיימים
         if (action.payload === "המשתמש קיים כבר עם מייל וסיסמה אלה") {
           state.message = "כבר קיים מייל וסיסמא כזו במערכת";
         } else {
