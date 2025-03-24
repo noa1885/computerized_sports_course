@@ -36,24 +36,24 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(serverSignIn.fulfilled, (state, action) => {
-        state.currentUser = action.payload;
-        state.status = "success";
-        state.message = "ההתחברות הצליחה";
-      })
-      .addCase(serverSignIn.rejected, (state, action) => {
-        state.status = "failed";
-        // טיפול בשגיאה במקרה של 404 (משתמש לא נמצא)
-        if (action.payload === "המשתמש לא נמצא במערכת.") {
-          state.message = action.payload;
-        } else {
-          state.message = action.payload || "שגיאה כלשהי בהתחברות";
-        }
-      })
-      .addCase(serverSignIn.pending, (state) => {
-        state.status = "loading";
-        state.message = "...בטעינה";
-      })
+    .addCase(serverSignIn.fulfilled, (state, action) => {
+      state.currentUser = action.payload;  // עדכון פרטי המשתמש אם ההתחברות הצליחה
+      state.status = "success";  // מצב התחברות הצליח
+      state.message = "ההתחברות הצליחה";  // הודעה למשתמש
+    })
+    .addCase(serverSignIn.rejected, (state, action) => {
+      state.status = "failed";  // מצב התחברות לא הצליח
+      // אם המשתמש לא נמצא במערכת
+      if (action.payload === "המשתמש לא נמצא במערכת.") {
+        state.message = action.payload;  // הצגת הודעת שגיאה
+      } else {
+        state.message = action.payload || "שגיאה כלשהי בהתחברות";  // הודעת שגיאה כללית
+      }
+    })
+    .addCase(serverSignIn.pending, (state) => {
+      state.status = "loading";  // מצב טעינה עד שהבקשה תושלם
+      state.message = "...בטעינה";  // הודעת טעינה
+    })
       .addCase(serverSignUp.fulfilled, (state, action) => {
         state.currentUser = action.payload;
         state.status = "success";

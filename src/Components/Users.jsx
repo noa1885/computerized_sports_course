@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers, addUser, updateUser, deleteUser } from "../features/users/usersSlice";
 
 const Users = () => {
   const dispatch = useDispatch();

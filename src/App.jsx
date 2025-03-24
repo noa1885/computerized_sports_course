@@ -1,26 +1,31 @@
-import { useState } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';  // ודא שאתה מייבא את Routes
-import { useDispatch } from 'react-redux';
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import LoginPage from './Components/LoginPage';
+import Users from './Components/Users';
+import PrivateRoute from './Components/PrivateRoute';
+import IndexPage from './Components/index'; // Assuming it's the home page
 import SignUpForm from './Components/SighUp';
+import Exercise from './features/exercise/Exercise';
+import ExercisePage from './features/exercise/ExercisePage';
 function App() {
-  const isLoggedIn = false; // מצב זה יכול לבוא מתוך Redux או useState אם רוצים
-
   return (
     <Provider store={store}>
       <Router>
         <Routes>
-          {/* אם המשתמש לא מחובר, מציגים את דף ההתחברות */}
-          {!isLoggedIn ? (
-            <Route path="/" element={<SignUpForm />} />
-          ) : (
-            // אם המשתמש מחובר, מציגים את דף המשתמשים
-            <Route path="/" element={<Users />} />
-          )}
+          <Route path="/" element={<ExercisePage />} /> {/* דף הבית */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpForm />} />
+          <Route
+            path="/users"
+            element={
+              <PrivateRoute>
+                <Users />
+              </PrivateRoute>
+            }
+          />
+          {/* If you want an explicit route for IndexPage */}
+          <Route path="/indexPage" element={<IndexPage />} />
         </Routes>
       </Router>
     </Provider>

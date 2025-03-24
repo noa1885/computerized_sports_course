@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux"; // import useSelector
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"; // הוספת useNavigate
 import {
   TextField,
   Button,
@@ -13,8 +14,8 @@ import { serverSignUp } from "../features/users/usersSlice";
 
 export default function SignUpForm() {
   const dispatch = useDispatch();
-  // בדיקה אם user קיים ב-state, ואם לא, שימוש בערך ברירת מחדל
-  const { message, status } = useSelector((state) => state.user || {}); // Get the message and status from the Redux store
+  const navigate = useNavigate(); // הוספת הניווט
+  const { message, status } = useSelector((state) => state.user || {});
   const [formData, setFormData] = useState({
     firstName: "",
     email: "",
@@ -28,7 +29,6 @@ export default function SignUpForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
     const newClient = {
       name: formData.firstName,
       email: formData.email,
@@ -37,15 +37,14 @@ export default function SignUpForm() {
       mail: formData.email,
       status: true,
     };
-    dispatch(serverSignUp(newClient)); // Dispatch the serverSignUp action
+    dispatch(serverSignUp(newClient));
   };
 
   useEffect(() => {
-    if (status === "failed" && message) {
-      // If the signup failed and there is a message, show the error
-      console.log("Error:", message);
+    if (status === "success") {
+      navigate("/indexPage"); // מעבר לעמוד הבית אחרי הרשמה מוצלחת
     }
-  }, [status, message]);
+  }, [status, navigate]);
 
   return (
     <Box
@@ -58,9 +57,13 @@ export default function SignUpForm() {
         borderRadius: 5,
         backgroundColor: "white",
         direction: "rtl",
-        boxShadow: "0px 4px 20px rgba(128, 0, 128, 0.5)", // purple border
+        boxShadow: "0px 4px 20px rgba(128, 0, 128, 0.5)",
         fontFamily: "'Assistant', sans-serif",
-        border: "2px solid purple", // outer border
+        border: "2px solid purple",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
       }}
     >
       <Typography
@@ -68,14 +71,14 @@ export default function SignUpForm() {
         gutterBottom
         textAlign="center"
         fontWeight="bold"
-        color="red" // red title
+        color="red"
         padding="15px"
       >
         Sign Up
       </Typography>
 
       <Grid container spacing={2}>
-        {[ 
+        {[
           { label: "שם פרטי", name: "firstName", icon: <AccountCircle /> },
           { label: "מייל", name: "email", type: "email", icon: <Email /> },
           { label: "גיל", name: "age", type: "number", icon: null },
@@ -119,7 +122,7 @@ export default function SignUpForm() {
 
       {status === "failed" && message && (
         <Typography color="error" textAlign="center" mt={2}>
-          {message} {/* Display the error message here */}
+          {message}
         </Typography>
       )}
 
@@ -128,7 +131,7 @@ export default function SignUpForm() {
         variant="contained"
         sx={{
           mt: 3,
-          backgroundColor: "red", 
+          backgroundColor: "red",
           color: "white",
           fontSize: "18px",
           fontWeight: "bold",

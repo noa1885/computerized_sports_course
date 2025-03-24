@@ -1,20 +1,15 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  TextField,
-  Button,
-  Box,
-  Typography,
-  InputAdornment,
-  Grid,
-} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { TextField, Button, Box, Typography, InputAdornment, Grid } from "@mui/material";
 import { Email, Lock } from "@mui/icons-material";
 import { serverSignIn } from "../features/users/usersSlice";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // הגדרת הניווט
   const { currentUser, message, status } = useSelector((state) => state.user || { currentUser: null, message: "", status: "" });
-  console.log("Redux State:", { currentUser, message, status });
+  
   const [formData, setFormData] = useState({
     mail: "",
     password: "",
@@ -29,38 +24,42 @@ export default function LoginPage() {
     dispatch(serverSignIn({ mail: formData.mail, password: formData.password }));
   };
 
+  // כאשר הסטטוס הוא "success" (התחברות הצליחה), נווט לעמוד indexPage
+  if (status === "success" && currentUser) {
+    navigate("/indexPage");
+  }
+
   return (
     <Box
       component="form"
       onSubmit={handleSubmit}
       sx={{
         maxWidth: 400,
-        mx: "auto",
+        mx: "auto", // זה ממרכז את ה-Box אופקית
         p: 4,
         borderRadius: 5,
         backgroundColor: "white",
         boxShadow: "0px 4px 20px rgba(128, 0, 128, 0.5)",
         border: "2px solid purple",
         textAlign: "center",
+        position: "absolute", // מיקום אבסולוטי כדי לאפשר צנטרור
+        top: "50%", // שולי עליון ב-50% מגובה המסך
+        left: "50%", // שולי שמאל ב-50% מרוחב המסך
+        transform: "translate(-50%, -50%)", // תזוזה חזרה ב-50% מהגובה והרחוב של ה-Box
       }}
     >
-{currentUser && currentUser.name && (
-  <Typography variant="h6" color="purple" textAlign="center" mb={2}>
-    ברוך הבא, {currentUser.name}!
-  </Typography>
-)}
-
-
+      {currentUser && currentUser.name && (
+        <Typography variant="h6" color="purple" textAlign="center" mb={2}>
+          ברוך הבא, {currentUser.name}!
+        </Typography>
+      )}
 
       <Typography variant="h5" fontWeight="bold" color="red" gutterBottom>
         התחברות
       </Typography>
 
       <Grid container spacing={2}>
-        {[
-          { label: "מייל", name: "mail", type: "email", icon: <Email /> },
-          { label: "סיסמה", name: "password", type: "password", icon: <Lock /> },
-        ].map(({ label, name, type, icon }) => (
+        {[{ label: "מייל", name: "mail", type: "email", icon: <Email /> }, { label: "סיסמה", name: "password", type: "password", icon: <Lock /> }].map(({ label, name, type, icon }) => (
           <Grid item xs={12} key={name}>
             <TextField
               label={label}
@@ -99,33 +98,32 @@ export default function LoginPage() {
         <Typography color="blue" mt={2}>טוען...</Typography>
       )}
 
-      {status === "succeeded" && user && (
+      {status === "succeeded" && currentUser && (
         <Typography color="green" mt={2}>
           התחברת בהצלחה!
         </Typography>
       )}
 
-<Button
-  type="submit"
-  variant="contained"
-  sx={{
-    mt: 3,
-    backgroundColor: "red",
-    color: "white",
-    fontSize: "18px",
-    fontWeight: "bold",
-    borderRadius: "25px",
-    width: "50%",
-    py: 1,
-    mx: "auto",
-    display: "block",
-    boxShadow: "0px 4px 15px rgba(206, 96, 69, 0.5)",
-    "&:hover": { backgroundColor: "darkred" },
-  }}
->
-  {currentUser && currentUser.name ? `שלום, ${currentUser.name}` : "התחבר"}
-</Button>
-
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{
+          mt: 3,
+          backgroundColor: "red",
+          color: "white",
+          fontSize: "18px",
+          fontWeight: "bold",
+          borderRadius: "25px",
+          width: "50%",
+          py: 1,
+          mx: "auto",
+          display: "block",
+          boxShadow: "0px 4px 15px rgba(206, 96, 69, 0.5)",
+          "&:hover": { backgroundColor: "darkred" },
+        }}
+      >
+        התחבר
+      </Button>
     </Box>
   );
 }
