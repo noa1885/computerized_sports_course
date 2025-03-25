@@ -1,0 +1,106 @@
+/* UserProgress.css */
+
+.user-progress-wrapper {
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 1s ease-in-out;
+    position: relative;
+    background-color: #fff;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .circle {
+    position: absolute;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    opacity: 0.3;
+    animation: float 6s ease-in-out infinite;
+    z-index: 0;
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
+  
+  .deco-pink { background-color: #ff80ab; top: 40px; left: 30px; }
+  .deco-sky { background-color: #82b1ff; bottom: 60px; left: 80px; }
+  .deco-mint { background-color: #69f0ae; top: 100px; right: 40px; }
+  
+  .progress-header {
+    text-align: center;
+    padding: 3rem 1rem 1rem;
+    z-index: 1;
+  }
+  
+  .progress-title {
+    font-weight: bold;
+    color: #6a1b9a;
+  }
+  
+  .progress-subtitle {
+    margin-top: 1rem;
+    color: #555;
+  }
+  
+  .progress-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    z-index: 1;
+  }
+  
+  .progress-card {
+    width: 280px;
+    border-radius: 20px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    transition: transform 0.3s ease;
+    background-color: #6a1b9a;
+    cursor: default;
+    z-index: 1;
+  }
+  
+  .progress-card:hover {
+    transform: translateY(-5px) scale(1.02);
+  }
+  
+  .progress-card.sky { background-color: #82b1ff; }
+  .progress-card.mint { background-color: #69f0ae; }
+  
+  .card-title {
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+  
+  .card-desc {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    color: #f5f5f5;
+  }
+  
+  .back-home-button {
+    display: flex;
+    justify-content: center;
+    margin: 3rem 0 2rem;
+  }
+  
