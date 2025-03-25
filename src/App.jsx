@@ -4,28 +4,27 @@ import { store } from './app/store';
 import LoginPage from './Components/LoginPage';
 import Users from './Components/Users';
 import PrivateRoute from './Components/PrivateRoute';
-import IndexPage from './Components/index'; // Assuming it's the home page
+import IndexPage from './Components/index'; 
 import SignUpForm from './Components/SighUp';
-import Exercise from './features/exercise/Exercise';
 import ExercisePage from './features/exercise/ExercisePage';
+import ShowAllTheExercise from './features/exercise/showAllTheExercise';
+
 function App() {
   return (
     <Provider store={store}>
       <Router>
         <Routes>
-          <Route path="/" element={<ExercisePage />} /> {/* דף הבית */}
+         <Route path="/" element={<ExercisePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/ShowAllTheExercise" element={<ShowAllTheExercise />} />
           <Route path="/signup" element={<SignUpForm />} />
+          <Route path="/indexPage" element={<IndexPage />} />
+
           <Route
             path="/users"
-            element={
-              <PrivateRoute>
-                <Users />
-              </PrivateRoute>
+            element={ <PrivateRoute>   <Users />      </PrivateRoute>
             }
           />
-          {/* If you want an explicit route for IndexPage */}
-          <Route path="/indexPage" element={<IndexPage />} />
         </Routes>
       </Router>
     </Provider>
