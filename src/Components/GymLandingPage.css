@@ -9,6 +9,7 @@ body {
   direction: rtl;
   font-family: "Varela Round", sans-serif;
   background-color: #fff;
+  place-content: center;
 }
 
 .landing-wrapper {
@@ -59,7 +60,7 @@ body {
 }
 
 .landing-header {
-  margin-top: 100px;
+  margin-top: 47px;
   text-align: center;
   margin-bottom: 2rem;
   z-index: 1;
@@ -108,8 +109,9 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
-  padding: 2rem;
+  padding: 9rem;
   z-index: 1;
+  margin-top: -59px;
 }
 
 .class-card {
@@ -208,16 +210,37 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
   opacity: 0;
   transition: opacity 1.2s ease-in-out;
+
+  /* אלו השורות שחשובות בשבילך: */
+  background-repeat: no-repeat;        /* ❌ לא לחזור על התמונה */
+  background-size: contain;           /* ✅ תתאים את עצמה לגובה של הקונטיינר */
+  background-position: right center;  /* 📍 להצמיד לימין (אפשר גם center center אם רוצים למרכז) */
+
+  /* אפשר גם: justify-content: center אם יש אלמנטים פנימיים */
 }
+
 
 .banner-slide.active {
   opacity: 1;
   z-index: 1;
 }
+
+.banner-image {
+  max-height: 100%;
+  height: 388px;
+  width: auto;
+  object-fit: contain;
+}
+.banner-image2 {
+  max-height: 100%;
+  height: 388px;
+  margin-right: 174px;
+  width: auto;
+  object-fit: contain;
+}
+
 
 .banner-caption {
   position: absolute;
@@ -225,14 +248,80 @@ body {
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(255, 255, 255, 0.8);
-  color: #6a1b9a;
+  color: #e79eb9;
   padding: 14px 28px;
   border-radius: 30px;
-  font-size: 1.2rem;
+  font-size: 3.2rem;
+  font-weight: bold;
+  animation: flyUp 1s ease-in-out;
+  margin-bottom: 34px;
+}
+.caption-small {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #c9e79e;
+  border-radius: 30px;
+  margin-bottom: -8px;
+  margin-left: -99px;
+  font-size: 2rem;
   font-weight: bold;
   animation: flyUp 1s ease-in-out;
 }
-
+.banner-caption2 {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(225 225 225);
+  padding: 150px 350px;
+  border-radius: 30px;
+  font-size: 6.2rem;
+  font-weight: bold;
+  animation: flyUp 1s ease-in-out;
+  margin-bottom: 17px;
+}
+.banner-like2 {
+  position: absolute;
+  bottom: -3px;
+  left: 52%;
+  height: 237px;
+  z-index: 1;
+  animation: bounce 2s infinite;
+  margin-bottom: 90px;
+}
+.caption-small2 {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  /* background-color: rgba(255, 255, 255, 0.8); */
+  color: #ff2680;
+  border-radius: 30px;
+  margin-bottom: 103px;
+  width: 305px;
+  margin-left: -134px;
+  font-size: 2.3rem;
+  font-weight: bold;
+  animation: flyUp 1s ease-in-out;
+}
+.aaa{
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #6d4bd1;
+  padding: 42px 150px;
+  border-radius: 30px;
+  font-size: 6.2rem;
+  font-weight: bold;
+  animation: flyUp 1s ease-in-out;
+  margin-bottom: 94px;
+  margin-left: -98px;
+  z-index: 10;
+}
 @keyframes flyUp {
   0% { transform: translate(-50%, 20px); opacity: 0; }
   100% { transform: translate(-50%, 0); opacity: 1; }
@@ -245,6 +334,7 @@ body {
   padding: 4rem 2rem;
   max-width: 1000px;
   margin: 0 auto;
+      margin-top: -112px;
 }
 
 .ad-row {
@@ -253,6 +343,7 @@ body {
   justify-content: space-between;
   gap: 6rem;
   flex-wrap: wrap;
+  
 }
 
 .ad-row.reverse {
@@ -289,4 +380,27 @@ body {
   border-radius: 30px;
   padding: 0.5rem 2rem;
   font-weight: bold;
+}
+.banner-kishkush {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  z-index: 0;
+}
+
+.banner-like {
+  position: absolute;
+  bottom: 40px;
+  left: 20%;
+  height: 300px;
+  z-index: 1;
+  animation: bounce 2s infinite;
+  margin-bottom: 77px;
+}
+
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }

@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Box, Typography, InputAdornment, Grid } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  InputAdornment,
+  Grid,
+} from "@mui/material";
 import { Email, Lock } from "@mui/icons-material";
 import { serverSignIn } from "../features/users/usersSlice";
 
-export default function LoginPage() {
+export default function LoginPage({ onClose }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // הגדרת הניווט
-  const { currentUser, message, status } = useSelector((state) => state.user || { currentUser: null, message: "", status: "" });
-  
+  const navigate = useNavigate();
+
+  const { currentUser, message, status } = useSelector(
+    (state) => state.user || { currentUser: null, message: "", status: "" }
+  );
+
   const [formData, setFormData] = useState({
     mail: "",
     password: "",
@@ -24,10 +34,12 @@ export default function LoginPage() {
     dispatch(serverSignIn({ mail: formData.mail, password: formData.password }));
   };
 
-  // כאשר הסטטוס הוא "success" (התחברות הצליחה), נווט לעמוד indexPage
-  if (status === "success" && currentUser) {
-    navigate("/indexPage");
-  }
+  useEffect(() => {
+    if (status === "succeeded" && currentUser) {
+      navigate("/indexPage");
+      if (onClose) onClose();
+    }
+  }, [status, currentUser, navigate, onClose]);
 
   return (
     <Box
@@ -35,31 +47,32 @@ export default function LoginPage() {
       onSubmit={handleSubmit}
       sx={{
         maxWidth: 400,
-        mx: "auto", // זה ממרכז את ה-Box אופקית
+        mx: "auto",
         p: 4,
         borderRadius: 5,
-        backgroundColor: "white",
-        boxShadow: "0px 4px 20px rgba(128, 0, 128, 0.5)",
-        border: "2px solid purple",
+        backgroundColor: "#f5faff",
+        boxShadow: "0px 6px 20px rgba(130, 177, 255, 0.6)",
+        border: "2px solid #82b1ff",
         textAlign: "center",
-        position: "absolute", // מיקום אבסולוטי כדי לאפשר צנטרור
-        top: "50%", // שולי עליון ב-50% מגובה המסך
-        left: "50%", // שולי שמאל ב-50% מרוחב המסך
-        transform: "translate(-50%, -50%)", // תזוזה חזרה ב-50% מהגובה והרחוב של ה-Box
+        position: "relative",
+        fontFamily: "'Varela Round', sans-serif",
       }}
     >
-      {currentUser && currentUser.name && (
-        <Typography variant="h6" color="purple" textAlign="center" mb={2}>
-          ברוך הבא, {currentUser.name}!
-        </Typography>
-      )}
-
-      <Typography variant="h5" fontWeight="bold" color="red" gutterBottom>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        color="#547fc6"
+        gutterBottom
+        sx={{ mb: 3 }}
+      >
         התחברות
       </Typography>
 
       <Grid container spacing={2}>
-        {[{ label: "מייל", name: "mail", type: "email", icon: <Email /> }, { label: "סיסמה", name: "password", type: "password", icon: <Lock /> }].map(({ label, name, type, icon }) => (
+        {[
+          { label: "מייל", name: "mail", type: "email", icon: <Email /> },
+          { label: "סיסמה", name: "password", type: "password", icon: <Lock /> },
+        ].map(({ label, name, type, icon }) => (
           <Grid item xs={12} key={name}>
             <TextField
               label={label}
@@ -71,18 +84,27 @@ export default function LoginPage() {
               required
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start" sx={{ color: "orange" }}>
+                  <InputAdornment position="start" sx={{ color: "#547fc6" }}>
                     {icon}
                   </InputAdornment>
                 ),
-                sx: {
+              }}
+              sx={{
+                "& .MuiInputBase-root": {
                   borderRadius: "25px",
-                  backgroundColor: "#F5F5F5",
+                  backgroundColor: "#e6f0ff",
                   fontSize: "16px",
                   height: "55px",
-                  color: "gray",
-                  "& fieldset": { borderColor: "purple" },
-                  "&:focus-within fieldset": { borderColor: "purple !important" },
+                  color: "#333",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#82b1ff",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#547fc6",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#547fc6",
                 },
               }}
             />
@@ -91,15 +113,19 @@ export default function LoginPage() {
       </Grid>
 
       {status === "failed" && message && (
-        <Typography color="error" mt={2}>{message}</Typography>
+        <Typography color="error" mt={2}>
+          {message}
+        </Typography>
       )}
 
       {status === "loading" && (
-        <Typography color="blue" mt={2}>טוען...</Typography>
+        <Typography color="#82b1ff" mt={2}>
+          טוען...
+        </Typography>
       )}
 
       {status === "succeeded" && currentUser && (
-        <Typography color="green" mt={2}>
+        <Typography color="#82b1ff" mt={2}>
           התחברת בהצלחה!
         </Typography>
       )}
@@ -108,8 +134,8 @@ export default function LoginPage() {
         type="submit"
         variant="contained"
         sx={{
-          mt: 3,
-          backgroundColor: "red",
+          mt: 4,
+          backgroundColor: "#82b1ff",
           color: "white",
           fontSize: "18px",
           fontWeight: "bold",
@@ -118,8 +144,8 @@ export default function LoginPage() {
           py: 1,
           mx: "auto",
           display: "block",
-          boxShadow: "0px 4px 15px rgba(206, 96, 69, 0.5)",
-          "&:hover": { backgroundColor: "darkred" },
+          boxShadow: "0px 4px 15px rgba(130, 177, 255, 0.5)",
+          "&:hover": { backgroundColor: "#547fc6" },
         }}
       >
         התחבר
