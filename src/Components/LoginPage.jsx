@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Box, Typography, InputAdornment, Grid } from "@mui/material";
@@ -7,14 +7,19 @@ import { serverSignIn } from "../features/users/usersSlice";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // הגדרת הניווט
+  const navigate = useNavigate();
   const { currentUser, message, status } = useSelector((state) => state.user || { currentUser: null, message: "", status: "" });
   
-  const [formData, setFormData] = useState({
-    mail: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ mail: "", password: "" });
 
+  useEffect(() => {
+    console.log("Checking navigation conditions:", { status, currentUser });
+    if (status === "success" && currentUser) {
+      console.log("Navigating to /indexPage");
+      navigate("/indexPage");
+    }
+  }, [status, currentUser, navigate]);
+  
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -24,28 +29,23 @@ export default function LoginPage() {
     dispatch(serverSignIn({ mail: formData.mail, password: formData.password }));
   };
 
-  // כאשר הסטטוס הוא "success" (התחברות הצליחה), נווט לעמוד indexPage
-  if (status === "success" && currentUser) {
-    navigate("/indexPage");
-  }
-
   return (
     <Box
       component="form"
       onSubmit={handleSubmit}
       sx={{
         maxWidth: 400,
-        mx: "auto", // זה ממרכז את ה-Box אופקית
+        mx: "auto",
         p: 4,
         borderRadius: 5,
         backgroundColor: "white",
-        boxShadow: "0px 4px 20px rgba(128, 0, 128, 0.5)",
+        boxShadow: "0px 4px 15px rgba(128, 0, 128, 0.5)",
         border: "2px solid purple",
         textAlign: "center",
-        position: "absolute", // מיקום אבסולוטי כדי לאפשר צנטרור
-        top: "50%", // שולי עליון ב-50% מגובה המסך
-        left: "50%", // שולי שמאל ב-50% מרוחב המסך
-        transform: "translate(-50%, -50%)", // תזוזה חזרה ב-50% מהגובה והרחוב של ה-Box
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
       }}
     >
       {currentUser && currentUser.name && (
@@ -53,13 +53,12 @@ export default function LoginPage() {
           ברוך הבא, {currentUser.name}!
         </Typography>
       )}
-
-      <Typography variant="h5" fontWeight="bold" color="red" gutterBottom>
+      <Typography variant="h5" fontWeight="bold" color="purple" mb={2}>
         התחברות
       </Typography>
-
       <Grid container spacing={2}>
-        {[{ label: "מייל", name: "mail", type: "email", icon: <Email /> }, { label: "סיסמה", name: "password", type: "password", icon: <Lock /> }].map(({ label, name, type, icon }) => (
+        {[{ label: "מייל", name: "mail", type: "email", icon: <Email /> },
+          { label: "סיסמה", name: "password", type: "password", icon: <Lock /> }].map(({ label, name, type, icon }) => (
           <Grid item xs={12} key={name}>
             <TextField
               label={label}
@@ -70,40 +69,23 @@ export default function LoginPage() {
               fullWidth
               required
               InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ color: "orange" }}>
-                    {icon}
-                  </InputAdornment>
-                ),
-                sx: {
-                  borderRadius: "25px",
-                  backgroundColor: "#F5F5F5",
-                  fontSize: "16px",
-                  height: "55px",
-                  color: "gray",
-                  "& fieldset": { borderColor: "purple" },
-                  "&:focus-within fieldset": { borderColor: "purple !important" },
-                },
+                startAdornment: <InputAdornment position="start">{icon}</InputAdornment>,
+              }}
+              sx={{
+                borderRadius: "25px",
+                backgroundColor: "#F5F5F5",
+                fontSize: "16px",
+                height: "55px",
+                "& fieldset": { borderColor: "purple" },
+                "&:focus-within fieldset": { borderColor: "purple !important" },
               }}
             />
           </Grid>
         ))}
       </Grid>
-
-      {status === "failed" && message && (
-        <Typography color="error" mt={2}>{message}</Typography>
-      )}
-
-      {status === "loading" && (
-        <Typography color="blue" mt={2}>טוען...</Typography>
-      )}
-
-      {status === "succeeded" && currentUser && (
-        <Typography color="green" mt={2}>
-          התחברת בהצלחה!
-        </Typography>
-      )}
-
+      {status === "failed" && message && <Typography color="error" mt={2}>{message}</Typography>}
+      {status === "loading" && <Typography color="blue" mt={2}>טוען...</Typography>}
+      {status === "succeeded" && currentUser && <Typography color="green" mt={2}>התחבר בהצלחה!</Typography>}
       <Button
         type="submit"
         variant="contained"

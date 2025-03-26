@@ -1,6 +1,6 @@
 // src/Components/CustomWorkoutStart.jsx
 import React, { useEffect, useState } from "react";
-import "./GymLandingPage.css"; // משתמשים באותו עיצוב
+import "./index.css"; // משתמשים באותו עיצוב
 import { Typography, Button, Checkbox, FormControlLabel, TextField, Card, CardContent } from "@mui/material";
 import { Settings } from "lucide-react";
 

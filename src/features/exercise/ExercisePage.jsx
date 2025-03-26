@@ -16,7 +16,7 @@ const ExercisePage = ({ exercises = [
   const navigate = useNavigate();
   const handleClose = () => {
     setIsExerciseOpen(false);
-    navigate("/ShowAllTheExercise")
+    navigate("/ShowTrack")
 
   };
 

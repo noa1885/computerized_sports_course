@@ -42,7 +42,7 @@ export default function SignUpForm() {
 
   useEffect(() => {
     if (status === "success") {
-      navigate("/indexPage"); // מעבר לעמוד הבית אחרי הרשמה מוצלחת
+      navigate("/home"); // מעבר לעמוד הבית אחרי הרשמה מוצלחת
     }
   }, [status, navigate]);
 

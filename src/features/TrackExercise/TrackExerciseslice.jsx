@@ -15,12 +15,12 @@ export const getExercise = createAsyncThunk(
   }
 );
 
-export const getExerciseById = createAsyncThunk(
-  "exercise/fetch",
+export const getTrackByIdClient = createAsyncThunk(
+  "track/fetch",  // שם פעולה חדש
   async (id, thunkApi) => {
     try {
-      let { data } = await axios.get(`https://localhost:7206/api/FitnessExercise/${id}`);
-      console.log(data)
+      let { data } = await axios.get(`https://localhost:7206/api/FitnessTrack/${id}`);  // יש לשנות את ה-API כאן אם צריך
+      console.log(data);
       return data;
     } catch (error) {
       return thunkApi.rejectWithValue(error.response?.data || "שגיאה כלשהי.");
@@ -28,26 +28,18 @@ export const getExerciseById = createAsyncThunk(
   }
 );
 
-export const postExerciseTrack = createAsyncThunk("ExerciseTrack-post", async (ExerciseTrack, thunkApi) => {
-  try {
-    
-    let { data } = await axios.post("https://localhost:7206/api/TrackExercise", ExerciseTrack);
-    return data;
-  } catch (error) {
-    return thunkApi.rejectWithValue(error.response?.data || "Error occurred");
-  }
-});
-
-export const exerciseSlice = createSlice({
+export const TrackExercise = createSlice({
   name: "exercise",
   initialState: {
     currentExercise: null,
+    currentTrack: null,  // הוסף את המידע של ה-Track
     status: null,
     message: "",
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // פעולת getExercise
       .addCase(getExercise.pending, (state) => {
         state.status = "loading";
         state.message = "טוען תרגיל...";
@@ -60,8 +52,23 @@ export const exerciseSlice = createSlice({
       .addCase(getExercise.rejected, (state, action) => {
         state.status = "failed";
         state.message = action.payload || "שגיאה בטעינת התרגיל.";
+      })
+
+      // פעולת getTrackByIdClient
+      .addCase(getTrackByIdClient.pending, (state) => {
+        state.status = "loading";
+        state.message = "טוען מסלול...";
+      })
+      .addCase(getTrackByIdClient.fulfilled, (state, action) => {
+        state.currentTrack = action.payload;
+        state.status = "success";
+        state.message = "מסלול נטען בהצלחה!";
+      })
+      .addCase(getTrackByIdClient.rejected, (state, action) => {
+        state.status = "failed";
+        state.message = action.payload || "שגיאה בטעינת המסלול.";
       });
   },
 });
 
-export default exerciseSlice.reducer;
+export default TrackExercise.reducer;

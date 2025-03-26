@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Card, CardMedia, CardContent, Button, TextField, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Typography, Card, CardMedia, CardContent, Button, TextField, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import "./Exercise.css"
 
 const Exercise = ({ exercise, onNext, onClose }) => {
   const [score, setScore] = useState("");
@@ -9,10 +8,11 @@ const Exercise = ({ exercise, onNext, onClose }) => {
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
+  // Reset score and time when a new exercise is loaded
   useEffect(() => {
-    setScore("");
-    setTimeLeft(exercise.time * 60);
-    setIsTimeUp(false);
+    setScore(""); // Reset the score each time a new exercise is loaded
+    setTimeLeft(exercise.time * 60); // Reset the time to the initial value of the exercise
+    setIsTimeUp(false); // Reset the time up flag
   }, [exercise]);
 
   useEffect(() => {
@@ -104,18 +104,31 @@ const Exercise = ({ exercise, onNext, onClose }) => {
         />
       </Card>
 
-      {/* הצגת הזמן כתור טקסט גדול בצבע צהוב */}
-      <Typography
-        variant="h2"
-        sx={{
-          color: "yellow",
-          fontWeight: "bold",
-          fontSize: "4rem",
-          marginBottom: 3,
-        }}
-      >
-        {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, "0")}
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative" }}>
+        <CircularProgress
+          variant="determinate"
+          value={(timeLeft / (exercise.time * 60)) * 100}
+          sx={{
+            margin: "0 auto",
+            color: isTimeUp ? "#ff5722" : "#1976d2",
+            width: "200px",
+            height: "200px",
+            position: "relative",
+          }}
+        />
+        <Typography
+          variant="h2"
+          color="text.primary"
+          sx={{
+            position: "absolute",
+            fontSize: "4rem",
+            fontWeight: "bold",
+            color: isTimeUp ? "#ff5722" : "black",
+          }}
+        >
+          {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, "0")}
+        </Typography>
+      </Box>
 
       <CardContent sx={{ position: "relative", maxWidth: "600px", width: "90%", marginTop: 3 }}>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 2, fontSize: "1.1rem", lineHeight: 1.5 }}>
@@ -152,8 +165,6 @@ const Exercise = ({ exercise, onNext, onClose }) => {
             },
             padding: "15px",
             fontSize: "1.5rem",
-            marginTop: 2,
-            position: "relative", // מוודא שהכפתור קרוב יותר לציון
           }}
           onClick={handleNext}
           disabled={!isValidScore || isTimeUp}
@@ -168,7 +179,7 @@ const Exercise = ({ exercise, onNext, onClose }) => {
           <Typography variant="body1">האם ברצונך לעבור לתרגיל הבא?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleCloseDialog(false)} color="secondary">
+          <Button onClick={() => handleCloseDialog(false)} color ="secondary">
             לא
           </Button>
           <Button onClick={() => handleCloseDialog(true)} color="primary">
