@@ -50,9 +50,10 @@
   }
   
   .checkbox-group {
+
     display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem 1.5rem;
     padding-right: 0.5rem;
   }
   
@@ -79,4 +80,30 @@
   button:hover {
     background-color: #8e24aa;
   }
+  .checkbox-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
   
+  .checkbox-row {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .checkbox-item {
+    flex: 1;
+  }
+  .classes-section
+  {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    padding: 3rem;
+    z-index: 1;
+}
+.checkbox-group{
+
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { getTrackByIdClient } from "./TrackExerciseslice"; // Redux slice
+import { getTrackByIdClient } from "./TrackExerciseSlice"; // Redux slice
 import { useNavigate } from 'react-router-dom';
 
 const ShowTracks = (trackId) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import "./GymLandingPage.css";
 import { Typography, Button } from "@mui/material";
 import { BarChart2, Activity } from "lucide-react"; // 👈 שינוי כאן
 

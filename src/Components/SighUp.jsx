@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"; // הוספת useNavigate
+import { useNavigate } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -12,10 +12,11 @@ import {
 import { AccountCircle, Email, Lock } from "@mui/icons-material";
 import { serverSignUp } from "../features/users/usersSlice";
 
-export default function SignUpForm() {
+export default function SignUpForm({ onClose }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // הוספת הניווט
+  const navigate = useNavigate();
   const { message, status } = useSelector((state) => state.user || {});
+
   const [formData, setFormData] = useState({
     firstName: "",
     email: "",
@@ -42,49 +43,45 @@ export default function SignUpForm() {
 
   useEffect(() => {
     if (status === "success") {
-      navigate("/home"); // מעבר לעמוד הבית אחרי הרשמה מוצלחת
+      navigate("/indexPage");
+      if (onClose) onClose();
     }
-  }, [status, navigate]);
+  }, [status, navigate, onClose]);
 
   return (
     <Box
       component="form"
       onSubmit={handleSubmit}
       sx={{
-        maxWidth: 600,
+        maxWidth: 400,
         mx: "auto",
         p: 4,
         borderRadius: 5,
         backgroundColor: "white",
+        boxShadow: "0px 4px 20px rgba(130, 177, 255, 0.5)",
+        border: "2px solid #82b1ff",
+        textAlign: "center",
         direction: "rtl",
-        boxShadow: "0px 4px 20px rgba(128, 0, 128, 0.5)",
-        fontFamily: "'Assistant', sans-serif",
-        border: "2px solid purple",
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
       }}
     >
       <Typography
         variant="h5"
         gutterBottom
-        textAlign="center"
         fontWeight="bold"
-        color="red"
-        padding="15px"
+        color="#547fc6"
+        mb={3}
       >
-        Sign Up
+        הרשמה
       </Typography>
 
       <Grid container spacing={2}>
         {[
           { label: "שם פרטי", name: "firstName", icon: <AccountCircle /> },
           { label: "מייל", name: "email", type: "email", icon: <Email /> },
-          { label: "גיל", name: "age", type: "number", icon: null },
           { label: "סיסמה", name: "password", type: "password", icon: <Lock /> },
+          { label: "גיל", name: "age", type: "number", icon: null },
         ].map(({ label, name, type = "text", icon }) => (
-          <Grid item xs={12} sm={6} key={name}>
+          <Grid item xs={12} key={name}>
             <TextField
               label={label}
               name={name}
@@ -93,27 +90,26 @@ export default function SignUpForm() {
               onChange={handleChange}
               fullWidth
               required
-              InputLabelProps={name === "age" ? { shrink: true } : {}}
               InputProps={{
                 startAdornment: icon && (
-                  <InputAdornment position="start" sx={{ color: "orange" }}>
+                  <InputAdornment position="start" sx={{ color: "#82b1ff" }}>
                     {icon}
                   </InputAdornment>
                 ),
                 sx: {
                   borderRadius: "25px",
-                  backgroundColor: "#F5F5F5",
+                  backgroundColor: "#F0F8FF",
                   fontSize: "16px",
                   height: "55px",
                   color: "gray",
-                  "& fieldset": { borderColor: "purple" },
+                  "& fieldset": { borderColor: "#82b1ff" },
                   "&:focus-within fieldset": {
-                    borderColor: "purple !important",
+                    borderColor: "#547fc6 !important",
                   },
                 },
               }}
               InputLabelProps={{
-                sx: { color: "red" },
+                sx: { color: "#547fc6" },
               }}
             />
           </Grid>
@@ -121,7 +117,7 @@ export default function SignUpForm() {
       </Grid>
 
       {status === "failed" && message && (
-        <Typography color="error" textAlign="center" mt={2}>
+        <Typography color="error" mt={2}>
           {message}
         </Typography>
       )}
@@ -131,7 +127,7 @@ export default function SignUpForm() {
         variant="contained"
         sx={{
           mt: 3,
-          backgroundColor: "red",
+          backgroundColor: "#82b1ff",
           color: "white",
           fontSize: "18px",
           fontWeight: "bold",
@@ -140,8 +136,8 @@ export default function SignUpForm() {
           py: 1,
           mx: "auto",
           display: "block",
-          boxShadow: "0px 4px 15px rgba(206, 96, 69, 0.5)",
-          "&:hover": { backgroundColor: "darkred" },
+          boxShadow: "0px 4px 15px rgba(130, 177, 255, 0.5)",
+          "&:hover": { backgroundColor: "#547fc6" },
         }}
       >
         אני רוצה להירשם
