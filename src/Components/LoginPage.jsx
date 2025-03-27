@@ -35,11 +35,13 @@ export default function LoginPage({ onClose }) {
   };
 
   useEffect(() => {
-    if (status === "succeeded" && currentUser) {
-      navigate("/indexPage");
+    console.log("status:", status);
+    console.log("currentUser:", currentUser);
+    if (status === "success" && currentUser) {
+      navigate("/");  // אם ההתחברות הצליחה
       if (onClose) onClose();
     }
-  }, [status, currentUser, navigate, onClose]);
+  }, [status, currentUser, navigate, onClose]);  
 
   return (
     <Box

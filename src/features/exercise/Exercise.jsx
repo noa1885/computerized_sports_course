@@ -4,189 +4,82 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const Exercise = ({ exercise, onNext, onClose }) => {
   const [score, setScore] = useState("");
-  const [timeLeft, setTimeLeft] = useState(exercise.time * 60);
-  const [isTimeUp, setIsTimeUp] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-
-  // Reset score and time when a new exercise is loaded
+  const [timeLeft, setTimeLeft] = useState(exercise.duration * 60); // זמן בשניות
+  const [isScoreEntered, setIsScoreEntered] = useState(false);
+  
   useEffect(() => {
-    setScore(""); // Reset the score each time a new exercise is loaded
-    setTimeLeft(exercise.duration * 60); // Reset the time to the initial value of the exercise
-    setIsTimeUp(false); // Reset the time up flag
+    setScore("");
+    setTimeLeft(exercise.duration * 60);
+    setIsScoreEntered(false);
   }, [exercise]);
 
   useEffect(() => {
     if (timeLeft > 0) {
       const timer = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
+        setTimeLeft(prevTime => prevTime - 1);
       }, 1000);
       return () => clearInterval(timer);
-    } else {
-      setIsTimeUp(true);
-      setOpenDialog(true);
     }
   }, [timeLeft]);
 
   const handleScoreChange = (e) => {
-    const value = Math.max(1, Math.min(10, Number(e.target.value)));
-    setScore(value);
+    const value = Number(e.target.value);
+    if (value >= 1 && value <= 10) {
+      setScore(value);
+      setIsScoreEntered(true);
+    }
   };
 
   const handleNext = () => {
-    onNext(score);
-  };
-
-  const handleCloseDialog = (response) => {
-    if (response) {
-      handleNext();
+    if (isScoreEntered) {
+      onNext(score);
     }
-    setOpenDialog(false);
   };
-
-  const isValidScore = Number.isInteger(score) && score >= 1 && score <= 10;
 
   return (
-    <Box
-      sx={{
-        maxWidth: "100vw",
-        minHeight: "100vh",
-        backgroundColor: "#f9f9f9",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        position: "relative",
-        overflow: "hidden",
-        padding: 0,
-      }}
-    >
-      <IconButton
-        onClick={onClose}
-        sx={{
-          position: "absolute",
-          top: 10,
-          left: 10,
-          color: "#ff5722",
-          zIndex: 1,
-        }}
-      >
+    <Box sx={{ textAlign: "center", padding: 2 }}>
+      <IconButton onClick={onClose} sx={{ position: "absolute", top: 10, left: 10 }}>
         <CloseIcon fontSize="large" />
       </IconButton>
 
-      <Typography
-        variant="h3"
-        fontWeight="bold"
-        color="#ff5722"
-        sx={{
-          marginBottom: 3,
-          zIndex: 2,
-          position: "relative",
-          fontSize: { xs: "2.5rem", sm: "3.5rem" },
-          textAlign: "center",
-        }}
-      >
-        {exercise.name}
-      </Typography>
+      <Typography variant="h3" sx={{ marginBottom: 3 }}>{exercise.name}</Typography>
 
       <Card sx={{ boxShadow: "none", backgroundColor: "transparent", display: "flex", justifyContent: "center", marginBottom: 3 }}>
         <CardMedia
           component="img"
           image={exercise.image}
           alt={exercise.name}
-          sx={{
-            borderRadius: "15px",
-            height: "50vh",
-            objectFit: "contain", 
-            width: "90vw",
-            marginBottom: 3,
-          }}
+          sx={{ borderRadius: "15px", height: "50vh", objectFit: "contain", width: "90vw", marginBottom: 3 }}
         />
       </Card>
 
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative" }}>
-        <CircularProgress
-          variant="determinate"
-          value={(timeLeft / (exercise.time * 60)) * 100}
-          sx={{
-            margin: "0 auto",
-            color: isTimeUp ? "#ff5722" : "#1976d2",
-            width: "200px",
-            height: "200px",
-            position: "relative",
-          }}
-        />
-        <Typography
-          variant="h2"
-          color="text.primary"
-          sx={{
-            position: "absolute",
-            fontSize: "4rem",
-            fontWeight: "bold",
-            color: isTimeUp ? "#ff5722" : "black",
-          }}
-        >
-          {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, "0")}
+      {/* טיימר */}
+      <Box sx={{ position: "relative", display: "inline-block", marginBottom: 3 }}>
+        <CircularProgress variant="determinate" value={(timeLeft / (exercise.duration * 60)) * 100} size={100} />
+        <Typography variant="h5" sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+          {isNaN(timeLeft) ? "00:00" : `${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, "0")}`}
         </Typography>
       </Box>
 
-      <CardContent sx={{ position: "relative", maxWidth: "600px", width: "90%", marginTop: 3 }}>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 2, fontSize: "1.1rem", lineHeight: 1.5 }}>
-          {exercise.description}
-        </Typography>
-
+      <CardContent>
         <TextField
           label="הזן ציון (1-10)"
-          variant="outlined"
           type="number"
-          fullWidth
           value={score}
           onChange={handleScoreChange}
           inputProps={{ min: 1, max: 10 }}
-          sx={{
-            mb: 2,
-            backgroundColor: "white",
-            borderRadius: 1,
-            boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
-            padding: 2,
-          }}
+          sx={{ mb: 2, width: "50%" }}
         />
 
         <Button
           variant="contained"
-          sx={{
-            width: "100%",
-            backgroundColor: "#ff5722",
-            color: "white",
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            "&:hover": {
-              backgroundColor: "#d84315",
-            },
-            padding: "15px",
-            fontSize: "1.5rem",
-          }}
           onClick={handleNext}
-          disabled={!isValidScore || isTimeUp}
+          disabled={!isScoreEntered}
+          sx={{ backgroundColor: "#ff5722", color: "white", padding: "10px 20px", fontSize: "1.2rem" }}
         >
           תרגיל הבא
         </Button>
       </CardContent>
-
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>הזמן עבר!</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1">האם ברצונך לעבור לתרגיל הבא?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleCloseDialog(false)} color="secondary">
-            לא
-          </Button>
-          <Button onClick={() => handleCloseDialog(true)} color="primary">
-            כן
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };

@@ -13,8 +13,8 @@ const ExercisePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-console.log(exercises)
-  const handleClose = () => {
+
+  const handleClose = () => {   
     setIsExerciseOpen(false);
     navigate("/ShowTrack");
   };
@@ -33,7 +33,7 @@ console.log(exercises)
   };
 
   if (!isExerciseOpen || !exercises || exercises.length === 0 || !exercises[currentIndex]) {
-    return <div>אין מידע על תרגיל</div>;
+    handleClose()
   }
   
   return (

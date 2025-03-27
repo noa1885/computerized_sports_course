@@ -6,7 +6,7 @@ export const getExercise = createAsyncThunk(
   "exercise/fetch",
   async (id, thunkApi) => {
     try {
-      let { data } = await axios.get(`https://localhost:7206/api/FitnessExercise/${id}`);
+      let { data } = await axios.get(`https://localhost:7206/api/FitnessTrack/${id}`);
       console.log(data)
       return data;
     } catch (error) {
