@@ -1,50 +1,77 @@
 import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
 import Exercise from "./Exercise";
-import { postExerciseTrack } from "./exerciseSlice";
+import { useSelector } from 'react-redux';
+import {postFullFitnessTrack} from "./exerciseSlice";
 import { useNavigate } from "react-router-dom";
 
-const ExercisePage = ({ exercises = [
-  { name: "תרגיל 1", description: "תיאור של תרגיל 1", image: "/path/to/image1.jpg" ,time:1},
-  { name: "תרגיל 2", description: "תיאור של תרגיל 2", image: "/path/to/image2.jpg",time:5 },
-  { name: "תרגיל 3", description: "תיאור של תרגיל 3", image: "/path/to/image3.jpg" ,time:2},
-] }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isExerciseOpen, setIsExerciseOpen] = useState(true); 
-  const dispatch = useDispatch();
+const ExercisePage = () => {
+  const exercises = useSelector((state) => state.trackE.currentTrackExercise); // שלוף את התרגילים מהסטור
 
+  console.log("exercises", exercises);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isExerciseOpen, setIsExerciseOpen] = useState(true);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [scores, setScores] = useState([]);//שמירת ציונים למסלול
+
+  const userId = useSelector((state) => state.user.currentUser?.id);
+
+const handleSubmitTrack = () => {
+  const track = {
+    date: new Date().toISOString(),
+    clientId: userId,
+    duration: exercises.reduce((sum, ex) => sum + (ex.duration || 1), 0), // או קבוע כמו 6
+    exercises: scores,
+  };
+
+  dispatch(postFullFitnessTrack(track));
+  navigate("/ShowTrack");
+};
+
+
+
   const handleClose = () => {
     setIsExerciseOpen(false);
-    navigate("/ShowAllTheExercise")
-
+    navigate("/ShowTrack");
   };
 
   const handleSubmitScore = async (score) => {
-    dispatch(postExerciseTrack(score)); 
+    dispatch(postExerciseTrack(score));
   };
 
   const goToNextExercise = (score) => {
-    handleSubmitScore(score);
+    // שמירת הציון
+    const currentExerciseId = exercises[currentIndex].id;
+    setScores(prev => [...prev, { fitnessExerciseId: currentExerciseId, mark: score }]);
+  
+    // מעבר לתרגיל הבא או סיום
     if (currentIndex < exercises.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      handleClose(); 
+      handleSubmitTrack(); // בסיום, שליחה
     }
   };
+  
 
-  if (!isExerciseOpen || !exercises[currentIndex]) return <div>אין מידע על תרגיל</div>;
+  if (!isExerciseOpen || !exercises || exercises.length === 0 || !exercises[currentIndex]) {
+    handleClose()
+  }
 
   return (
     <div>
-      <Exercise 
-        exercise={exercises[currentIndex]} 
-        onNext={goToNextExercise} 
+      <Exercise
+        exercise={exercises[currentIndex]}
+        onNext={goToNextExercise}
         onClose={handleClose}
-        time={exercises[currentIndex].time}
+        duration={exercises[currentIndex].duration}
       />
     </div>
   );
+  
+
 };
 
 export default ExercisePage;

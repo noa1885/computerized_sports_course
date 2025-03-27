@@ -1,19 +1,34 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
-// פעולה שמביאה TrackExercise לפי ID
 export const getTrackExercise = createAsyncThunk(
   "trackExercise/fetch",
-  async (id,time,categories, thunkApi) => {
+  async ({ id, categories, time }, thunkApi) => {
     try {
-      const { data } = await axios.get(`https://localhost:7206/api/TrackExercise/${id}`);
-      console.log(data);
-      return data;
+      const response = await axios.post(
+        "https://localhost:7206/api/FitnessExercise/by-time",
+        {
+          "id": id,
+          "ctgry": categories,
+          "time": time
+        }
+      );
+      return response.data; // מחזיר את הנתונים מהשרת
     } catch (error) {
-      return thunkApi.rejectWithValue(error.response?.data || "שגיאה כלשהי.");
+      console.error(error);
+      return thunkApi.rejectWithValue(
+        error.response?.data || "שגיאה כלשהי."
+      );
     }
   }
 );
+
+
+
+
+
+
+
+
 
 export const trackExerciseSlice = createSlice({
   name: "trackExercise",

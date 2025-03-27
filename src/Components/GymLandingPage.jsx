@@ -1,5 +1,7 @@
 // GymLandingPage.jsx
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux"; // יבוא תקין של useSelector
+import { useNavigate } from "react-router-dom";
 import "./GymLandingPage.css";
 import {
   AppBar,
@@ -44,13 +46,21 @@ const GymLandingPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [openLogin, setOpenLogin] = useState(false);
   const [signUp, setOpenSignUp] = useState(false);
+  const [userName, setUserName] = useState(""); // ברירת מחדל
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveBanner((prev) => (prev + 1) % 2); // מחליף בין שני באנרים
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const user = useSelector((state) => state.user.currentUser); // ✅ יש להשתמש מחוץ ל-useEffect
+const userNameFromStore = user ? user.name : "";  
+
+useEffect(() => {
+  console.log('Current user:', user); // הצגת המידע על המשתמש בקונסולה
+  setUserName(user ? user.name : "");
+  const interval = setInterval(() => {
+    setActiveBanner((prev) => (prev + 1) % 2);
+  }, 5000);
+
+  return () => clearInterval(interval);
+}, [userNameFromStore]); // ✅ תלות כדי לוודא עדכון נכון
 
 
 
@@ -66,16 +76,20 @@ const GymLandingPage = () => {
           <div className="navbar-logo">
             <Dumbbell color="#ec407a" />
             <Typography variant="h6" className="logo-text">
-              GymPro
+            Fitmiss
             </Typography>
           </div>
+          <Typography variant="h6" className="navbar-username">
+            {userName}
+          </Typography>
           <div className="navbar-links">
-            <a href="#classes">חוגים</a>
+            <a href="#classes"> {userName} :שם</a>
             <a href="#contact">צור קשר</a>
             <a href="#contact">אודות</a>
           </div>
         </Toolbar>
       </AppBar>
+
 
 
 
@@ -170,9 +184,9 @@ const GymLandingPage = () => {
           <div className="ad-text">
             <h3>התחלה חכמה מהבית 🏠</h3>
             <p>בונים שגרה בריאה גם מהבית – עם כל הכלים להצלחה</p>
-            <Link to="/CustomWorkoutStart">
-              <Button variant="contained" className="ad-button">בואו נתחיל</Button>
-            </Link>
+            <Button variant="contained" className="ad-button" onClick={() => navigate("/custom-start")}>
+ בואו נתחיל
+</Button>
           </div>
         </div>
 
@@ -181,9 +195,8 @@ const GymLandingPage = () => {
           <div className="ad-text">
             <h3>זזים קדימה בכיף!</h3>
             <p>אימון זה לא משימה – זו שמחה בתנועה!</p>
-            <Link to="/progress">
-              <Button variant="contained" className="ad-button">הציונים שלי</Button>
-            </Link>
+            <Button variant="contained" className="ad-button" onClick={() => navigate("/ShowTrack")}>
+מסלולים</Button>
           </div>
         </div>
 

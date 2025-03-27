@@ -1,10 +1,14 @@
-import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-const PrivateRoute = ({ children }) => {
-  const user = useSelector((state) => state.user.currentUser);
+function PrivateRoute({ children }) {
+  const user = useSelector(state => state.user.currentUser); // בדיקה אם המשתמש מחובר
 
-  return user ? children : <Navigate to="/login" replace />;
-};
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+}
 
 export default PrivateRoute;
