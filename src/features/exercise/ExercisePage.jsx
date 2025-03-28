@@ -22,7 +22,6 @@ const ExercisePage = () => {
   const handleSubmitScore = async (score) => {
     dispatch(postExerciseTrack(score)); 
   };
-
   const goToNextExercise = (score) => {
     handleSubmitScore(score);
     if (currentIndex < exercises.length - 1) {

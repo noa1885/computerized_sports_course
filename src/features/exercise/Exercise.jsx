@@ -6,7 +6,7 @@ const Exercise = ({ exercise, onNext, onClose }) => {
   const [score, setScore] = useState("");
   const [timeLeft, setTimeLeft] = useState(exercise.duration * 60); // זמן בשניות
   const [isScoreEntered, setIsScoreEntered] = useState(false);
-  
+  console.log(exercise)
   useEffect(() => {
     setScore("");
     setTimeLeft(exercise.duration * 60);
@@ -45,12 +45,14 @@ const Exercise = ({ exercise, onNext, onClose }) => {
       <Typography variant="h3" sx={{ marginBottom: 3 }}>{exercise.name}</Typography>
 
       <Card sx={{ boxShadow: "none", backgroundColor: "transparent", display: "flex", justifyContent: "center", marginBottom: 3 }}>
-        <CardMedia
-          component="img"
-          image={exercise.image}
-          alt={exercise.name}
-          sx={{ borderRadius: "15px", height: "50vh", objectFit: "contain", width: "90vw", marginBottom: 3 }}
-        />
+      <CardMedia
+  component="img"
+
+  image={exercise.gif}  // מתייחס ל-Gif.image
+  alt={exercise.name}
+  sx={{ borderRadius: "15px", height: "50vh", objectFit: "contain", width: "90vw", marginBottom: 3 }}
+/>
+
       </Card>
 
       {/* טיימר */}

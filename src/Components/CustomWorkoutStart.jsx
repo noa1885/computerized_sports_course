@@ -53,7 +53,6 @@ const CustomWorkoutStart = () => {
     const userIdToSend = userId || null;  // אם אין ID של משתמש, שולחים null
     const list = selectedCategories; // הקטגוריות שנבחרו
     const selectedCategoryObjects = categories.filter(cat => selectedCategories.includes(cat.id));
-    debugger
     console.log(selectedCategoryObjects)
     // שולח ל-dispatch את הקטגוריות שנבחרו בלבד
     dispatch(getTrackExercise({ id: userIdToSend, categories: selectedCategoryObjects, time: duration }));

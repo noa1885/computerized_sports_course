@@ -14,7 +14,6 @@ export const getExercise = createAsyncThunk(
     }
   }
 );
-
 export const getTrackByIdClient = createAsyncThunk(
   "track/fetch",  // שם פעולה חדש
   async (id, thunkApi) => {
